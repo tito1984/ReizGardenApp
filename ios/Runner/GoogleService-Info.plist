@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1098282418599-cueqkqf3d402ed57qrcldqrkkuv5605q.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1098282418599-cueqkqf3d402ed57qrcldqrkkuv5605q</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>1098282418599-2upq52nalpbn8ppl89jj0desbbd8bdk5.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAAsCkO_Pf-bOeAi2oa1PxWxW9nNM2bURs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1098282418599</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.reizgarden.reizGardenMaster</string>
+	<key>PROJECT_ID</key>
+	<string>reizgarden-d2eab</string>
+	<key>STORAGE_BUCKET</key>
+	<string>reizgarden-d2eab.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1098282418599:ios:837dd4e60f90dbe9</string>
+	<key>DATABASE_URL</key>
+	<string>https://reizgarden-d2eab.firebaseio.com</string>
+</dict>
+</plist>
