@@ -72,7 +72,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
                           ),
                           onTap: () {
                             if (parts[position].finished == false) {
-                              _partAlert(context);
+                              _editNewPart(parts[position], 'Editar parte');
                             } else {
                               _viewPart(parts[position]);
                             }
@@ -93,12 +93,15 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
                               fontSize: 18.0,
                             ),
                           ),
+                          onTap: () {
+                            if (parts[position].finished == false) {
+                              _editNewPart(parts[position], 'Editar parte');
+                            } else {
+                              _viewPart(parts[position]);
+                            }
+                          },
                         ),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.border_color, color: Colors.blue,),
-                        onPressed: () => _editNewPart(parts[position], 'Editar parte'),
-                      )
                     ],
                   )
                 ],
@@ -157,17 +160,6 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
       finish = 'Finaliza antes';
     }
     return finish;
-  }
-
-  Future<void> _partAlert(BuildContext context) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Finaliza el parte antes'),
-          );
-        }
-    );
   }
 
 }

@@ -28,6 +28,10 @@ class _CreateWorkerState extends State<CreateWorker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: FlatButton(
+          child: Icon(Icons.arrow_back, color: Colors.white,),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text('Insertar Trabajador'),
         backgroundColor: Colors.green,
         centerTitle: true,

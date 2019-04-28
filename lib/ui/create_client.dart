@@ -28,7 +28,12 @@ class _CreateClientState extends State<CreateClient> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: FlatButton(
+          child: Icon(Icons.arrow_back, color: Colors.white,),
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text('Insertar Cliente'),
+        backgroundColor: Colors.green,
         centerTitle: true,
       ),
       body: Column(
