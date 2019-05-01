@@ -1,6 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
 
-import 'client.dart';
 
 
 class WorkingPart {
@@ -12,9 +11,11 @@ class WorkingPart {
   String _startHour;
   String _finalHour;
   bool _finished;
+  bool _passed;
 
   WorkingPart(this._id, this._client, this._workers, this._material,
-      this._date, this._startHour, this._finalHour, this._finished);
+      this._date, this._startHour, this._finalHour, this._finished,
+      this._passed);
 
   WorkingPart.map(dynamic obj) {
     this._client = obj['client'];
@@ -24,6 +25,7 @@ class WorkingPart {
     this._startHour = obj['start_hour'];
     this._finalHour = obj['final_hour'];
     this._finished = obj['finished'];
+    this._passed = obj['passed'];
   }
 
   String get id => _id;
@@ -34,6 +36,7 @@ class WorkingPart {
   String get startHour => _startHour;
   String get finalHour => _finalHour;
   bool get finished => _finished;
+  bool get passed => _passed;
 
   WorkingPart.fromSnapshot(DataSnapshot snapshot) {
     _id = snapshot.key;
@@ -44,6 +47,7 @@ class WorkingPart {
     _startHour = snapshot.value['start_hour'];
     _finalHour = snapshot.value['final_hour'];
     _finished = snapshot.value['finished'];
+    _passed = snapshot.value['passed'];
   }
 
 

@@ -48,6 +48,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
           child: ListView.builder(
             itemCount: parts.length,
             padding: EdgeInsets.all(15.0),
+
             shrinkWrap: true,
             itemBuilder: (context, position) {
               workers = new List<String>.from(parts[position].workers);
@@ -103,6 +104,27 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
                         ),
                       ),
                     ],
+                  ),
+
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text('${_numberMaterial(parts[position])} materiales usados',
+                          style: TextStyle(
+                              color: Colors.blueGrey,
+                              fontSize: 18.0,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      Expanded(
+                          child: IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red,),
+                            onPressed: () => _deletePartAlert(context, parts[position], position),
+                          )
+                      ),
+
+                    ],
                   )
                 ],
               );
@@ -116,6 +138,14 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
         ),
       ),
     );
+  }
+  
+  int _numberMaterial(WorkingPart part) {
+    if(part.material == null) {
+      return 0;
+    } else {
+      return part.material.length;
+    }
   }
 
   void _onPartAdded(Event event) {
@@ -141,7 +171,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
   void _createNewPart(BuildContext context, String title) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateWorkingPart(WorkingPart(null, null, null, null, '', '', '', true), title))
+      MaterialPageRoute(builder: (context) => CreateWorkingPart(WorkingPart(null, null, null, null, '', '', '', true, false), title))
     );
   }
 
@@ -160,6 +190,38 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
       finish = 'Finaliza antes';
     }
     return finish;
+  }
+
+  void _deletePart(BuildContext context, WorkingPart part, int position)async {
+    await workingPartReference.child(part.id).remove().then((_) {
+      setState(() {
+        parts.removeAt(position);
+      });
+    });
+  }
+
+  Future<void> _deletePartAlert(BuildContext context, WorkingPart part, int position) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Estas seguro que quieres borrar el parte?'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('SI'),
+                onPressed: () {
+                  _deletePart(context, part, position);
+                  Navigator.pop(context);
+                },
+              ),
+              FlatButton(
+                child: Text('NO'),
+                onPressed: () => Navigator.pop(context),
+              )
+            ],
+          );
+        }
+    );
   }
 
 

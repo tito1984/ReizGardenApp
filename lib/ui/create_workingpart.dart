@@ -52,6 +52,9 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
     dropList = clients.map((val) => new DropdownMenuItem<String>(
       child: Text(val.name), value: val.name,
     )).toList();
+    if (widget.part.client != null) {
+      selected = widget.part.client;
+    }
   }
 
   @override
@@ -92,6 +95,10 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
       title: 'Nuevo Parte',
       home: Scaffold(
         appBar: AppBar(
+          leading: FlatButton(
+            child: Icon(Icons.arrow_back, color: Colors.white,),
+            onPressed: () => Navigator.pop(context),
+          ),
           title: Text(widget.title),
           backgroundColor: Colors.green,
           centerTitle: true,
@@ -260,6 +267,14 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
     }
   }
 
+  void _refreshMaterial() {
+    if (widget.part.material != null) {
+      for (int i = 0; i< widget.part.material.length; i++) {
+        material.add(widget.part.material[i]);
+      }
+    }
+  }
+
   void _createPart() {
     if(widget.part.id == null) {
       if (selected == null) {
@@ -276,7 +291,8 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
             'material': material,
             'date': date,
             'start_hour': startHour,
-            'finished': false
+            'finished': false,
+            'passed': false
           }).then((doc) {
             Navigator.pop(context);
           });
@@ -285,16 +301,18 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
 
     }else{
       _addWorkers();
+      _refreshMaterial();
       finalHour = DateFormat.Hm("es_ES").format(DateTime.now());
       date = DateFormat.yMd("es_ES").format(DateTime.now());
       partReference.child(widget.part.id).set({
         'client': widget.part.client,
         'workers': alWorkers,
-        'material': widget.part.material,
+        'material': material,
         'date': date,
         'start_hour': widget.part.startHour,
         'final_hour': finalHour,
-        'finished': true
+        'finished': true,
+        'passed': false
       }).then((_) {
         Navigator.pop(context);
       });
@@ -308,6 +326,14 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Introduce un cliente'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
         );
       }
     );

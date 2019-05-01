@@ -62,6 +62,10 @@ class _ViewWorkingPartState extends State<ViewWorkingPart> {
       title: 'Ver partes de Trabajo',
       home: Scaffold(
         appBar: AppBar(
+          leading: FlatButton(
+            child: Icon(Icons.arrow_back, color: Colors.white,),
+            onPressed: () => Navigator.pop(context),
+          ),
           title: Text('Ver Parte'),
           backgroundColor: Colors.green,
           centerTitle: true,
