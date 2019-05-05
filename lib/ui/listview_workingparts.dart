@@ -105,7 +105,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
                       ),
                       Expanded(
                         child: ListTile(
-                          title: Text('Horas: ${parts[position].time}',
+                          title: Text('Horas: ${_isFinished(parts[position])}',
                             style: TextStyle(
                               color: Colors.blueGrey,
                               fontSize: 18.0
@@ -198,6 +198,16 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
         context,
         MaterialPageRoute(builder: (context) => ViewWorkingPart(user: widget.user, role: widget.role, part: part))
     );
+  }
+
+  String _isFinished(WorkingPart part) {
+    String finish;
+    if (part.finished == true){
+      finish = part.time.toString();
+    }else{
+      finish = 'Finaliza';
+    }
+    return finish;
   }
 
   void _deletePart(BuildContext context, WorkingPart part, int position)async {
