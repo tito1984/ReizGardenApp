@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
@@ -7,6 +8,14 @@ import 'package:reiz_garden_master/ui/create_workingpart.dart';
 import 'package:reiz_garden_master/ui/view_workingpart.dart';
 
 class ListViewWorkingParts extends StatefulWidget {
+  const ListViewWorkingParts({
+    Key key,
+    this.user,
+    this.role
+  }) : super(key: key);
+
+  final FirebaseUser user;
+  final String role;
   @override
   _ListViewWorkingPartsState createState() => _ListViewWorkingPartsState();
 }
@@ -38,6 +47,20 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
     _onPartAddedSubscription.cancel();
     super.dispose();
   }
+
+  Widget deleteButton(int position) {
+    if (widget.role == 'admin') {
+      return Expanded(
+          child: IconButton(
+          icon: Icon(Icons.delete, color: Colors.red,),
+          onPressed: () => _deletePartAlert(context, parts[position], position),
+          )
+      );
+    } else {
+      return Container();
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +105,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
                       ),
                       Expanded(
                         child: ListTile(
-                          title: Text('${parts[position].startHour} hasta ${_isFinished(parts[position])}',
+                          title: Text('Horas: ${parts[position].time}',
                             style: TextStyle(
                               color: Colors.blueGrey,
                               fontSize: 18.0
@@ -117,12 +140,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      Expanded(
-                          child: IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red,),
-                            onPressed: () => _deletePartAlert(context, parts[position], position),
-                          )
-                      ),
+                      deleteButton(position)
 
                     ],
                   )
@@ -164,32 +182,22 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
   void _editNewPart(WorkingPart part, String title) async {
     await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => CreateWorkingPart(part, title))
+        MaterialPageRoute(builder: (context) => CreateWorkingPart(user: widget.user, role: widget.role, part: part,title: title))
     );
   }
 
   void _createNewPart(BuildContext context, String title) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateWorkingPart(WorkingPart(null, null, null, null, '', '', '', true, false), title))
+      MaterialPageRoute(builder: (context) => CreateWorkingPart(user: widget.user, role: widget.role, part: WorkingPart(null, null, null, null, null, '', '', '',0, 0, 0, true, false),title: title))
     );
   }
 
   void _viewPart(WorkingPart part) async {
     await Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ViewWorkingPart(part))
+        MaterialPageRoute(builder: (context) => ViewWorkingPart(user: widget.user, role: widget.role, part: part))
     );
-  }
-
-  String _isFinished(WorkingPart part) {
-    String finish;
-    if (part.finished == true){
-      finish = part.finalHour;
-    }else{
-      finish = 'Finaliza antes';
-    }
-    return finish;
   }
 
   void _deletePart(BuildContext context, WorkingPart part, int position)async {

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
@@ -7,9 +8,16 @@ import 'package:reiz_garden_master/model/worker.dart';
 import 'package:reiz_garden_master/model/client.dart';
 
 class ViewWorkingPart extends StatefulWidget {
-  final WorkingPart part;
-  ViewWorkingPart(this.part);
+  const ViewWorkingPart({
+    Key key,
+    this.user,
+    this.role,
+    this.part
+  }) : super(key: key);
 
+  final FirebaseUser user;
+  final String role;
+  final WorkingPart part;
 
   @override
   _ViewWorkingPartState createState() => _ViewWorkingPartState();

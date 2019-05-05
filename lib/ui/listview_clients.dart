@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
@@ -7,6 +8,14 @@ import 'package:reiz_garden_master/ui/create_client.dart';
 
 
 class ListViewClients extends StatefulWidget {
+  const ListViewClients({
+    Key key,
+    this.user,
+    this.role
+  }) : super(key: key);
+
+  final FirebaseUser user;
+  final String role;
   @override
   _ListViewClientsState createState() => _ListViewClientsState();
 }
@@ -111,7 +120,7 @@ class _ListViewClientsState extends State<ListViewClients> {
   void _createNewClient(BuildContext context) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateClient(Client(null, '')))
+      MaterialPageRoute(builder: (context) => CreateClient(user: widget.user, role: widget.role, client: Client(null, '')))
     );
   }
 }

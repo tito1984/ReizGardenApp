@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
@@ -6,6 +7,14 @@ import 'package:reiz_garden_master/model/worker.dart';
 import 'package:reiz_garden_master/ui/create_worker.dart';
 
 class ListViewWorkers extends StatefulWidget {
+  const ListViewWorkers({
+    Key key,
+    this.user,
+    this.role
+  }) : super(key: key);
+
+  final FirebaseUser user;
+  final String role;
   @override
   _ListViewWorkersState createState() => _ListViewWorkersState();
 }
@@ -33,6 +42,17 @@ class _ListViewWorkersState extends State<ListViewWorkers> {
     _onWorkerChangedSubscription.cancel();
     _onWorkerAddedSubscription.cancel();
     super.dispose();
+  }
+
+  Widget createWorkerButton() {
+    if (widget.role == 'admin') {
+      return FloatingActionButton(
+        child: Icon(Icons.add, color: Colors.white,),
+        heroTag: 'createWorker',
+        backgroundColor: Colors.green,
+        onPressed: () => _createNewWorker(context),
+      );
+    }
   }
 
   @override
@@ -76,12 +96,7 @@ class _ListViewWorkersState extends State<ListViewWorkers> {
             },
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add, color: Colors.white,),
-          heroTag: 'createWorker',
-          backgroundColor: Colors.green,
-          onPressed: () => _createNewWorker(context),
-        ),
+          floatingActionButton: createWorkerButton()
       ),
     );
   }
@@ -110,7 +125,7 @@ class _ListViewWorkersState extends State<ListViewWorkers> {
   void _createNewWorker(BuildContext context) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => CreateWorker(Worker(null, '', false)))
+      MaterialPageRoute(builder: (context) => CreateWorker(user: widget.user, role: widget.role, worker: Worker(null, '', '', '', '', false)))
     );
   }
 

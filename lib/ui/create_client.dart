@@ -1,11 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import 'package:reiz_garden_master/model/client.dart';
 
 class CreateClient extends StatefulWidget {
+  const CreateClient({
+    Key key,
+    this.user,
+    this.role,
+    this.client
+  }) : super(key: key);
+
+  final FirebaseUser user;
+  final String role;
   final Client client;
-  CreateClient(this.client);
 
   @override
   _CreateClientState createState() => _CreateClientState();

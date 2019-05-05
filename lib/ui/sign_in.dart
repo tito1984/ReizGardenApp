@@ -1,54 +1,28 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-import 'package:reiz_garden_master/model/worker.dart';
-
-class CreateWorker extends StatefulWidget {
-  const CreateWorker({
-    Key key,
-    this.user,
-    this.role,
-    this.worker,
-  }) : super(key: key);
-
-  final FirebaseUser user;
-  final String role;
-  final Worker worker;
-
+class SignIn extends StatefulWidget {
   @override
-  _CreateWorkerState createState() => _CreateWorkerState();
+  _SignInState createState() => new _SignInState();
 }
 
 final workerReference = FirebaseDatabase.instance.reference().child('workers');
 
-class _CreateWorkerState extends State<CreateWorker> {
+class _SignInState extends State<SignIn> {
+  String roleUser;
+  String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  String _email, _name, _password;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
-
-    final name = TextFormField(
-      autofocus: false,
-      validator: (input) {
-        if(input.isEmpty) {
-          return 'Introduce un nombre';
-        }
-      },
-      onSaved: (input) => _name = input,
-      decoration: InputDecoration(
-          hintText: 'Nombre',
-          contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          border:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    final logo = Hero(
+      tag: 'hero',
+      child: CircleAvatar(
+        backgroundColor: Colors.transparent,
+        radius: 100.0,
+        child: Image.asset('assets/images/logo.png'),
+      ),
     );
 
     final email = TextFormField(
@@ -69,6 +43,7 @@ class _CreateWorkerState extends State<CreateWorker> {
 
     final password = TextFormField(
       autofocus: false,
+      obscureText: true,
       validator: (input) {
         if(input.isEmpty) {
           return 'Introduce la contraseña';
@@ -82,7 +57,7 @@ class _CreateWorkerState extends State<CreateWorker> {
           OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final createWorker = Padding(
+    final loginButton = Padding(
       padding: EdgeInsets.symmetric( horizontal: 8.0),
       child: ButtonTheme(
         minWidth: 150.0,
@@ -90,40 +65,29 @@ class _CreateWorkerState extends State<CreateWorker> {
         child: RaisedButton(
           shape: new RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0)),
-          onPressed: () {
-            signUp();
-
-          },
+          onPressed: signIn,
           color: Colors.green,
           child: Text(
-            'Crear trabajador',
+            'Iniciar Sesion',
             style: TextStyle(color: Colors.white),
           ),
         ),
       ),
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: FlatButton(
-          child: Icon(Icons.arrow_back, color: Colors.white,),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text('Crear Trabajador'),
-        backgroundColor: Colors.green,
-        centerTitle: true,
-      ),
-      body: Column(
-        children: <Widget>[
-          Form(
+    return MaterialApp(
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Form(
             key: _formKey,
             child: ListView(
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 24.0, right: 24.0),
               children: <Widget>[
                 SizedBox(height: 60.0),
-                name,
-                SizedBox(height: 8.0),
+                logo,
+                SizedBox(height: 60.0),
                 email,
                 SizedBox(height: 8.0),
                 password,
@@ -131,35 +95,39 @@ class _CreateWorkerState extends State<CreateWorker> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    createWorker,
+                    loginButton,
                   ],
                 ),
               ],
             ),
-          ),
-        ],
+          )
+        ),
       ),
     );
   }
 
-  void signUp() async {
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
+  void signIn() async {
+    final _formState = _formKey.currentState;
+
+    if (_formState.validate()) {
+      _formState.save();
       try {
-        FirebaseUser user = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: _email, password: _password);
-        workerReference.push().set({
-          'email': _email,
-          'name': _name,
-          'role': 'worker',
-          'uid': user.uid,
-          'check': false
-        }).then((_) {
-          Navigator.pop(context);
+        FirebaseUser user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
+        await workerReference.once().then((DataSnapshot snapshot) {
+          Map<dynamic, dynamic> values = snapshot.value;
+          values.forEach((key, values) {
+            if ((values['uid']).toString() == (user.uid).toString()) {
+              roleUser = (values['role']).toString();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage(user: user, role: roleUser)));
+            }
+          });
         });
+
+        //TODO: Navigate to home
       } catch(e) {
         print(e.message);
       }
+
     }
   }
 }
-

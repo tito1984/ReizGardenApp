@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
@@ -9,9 +10,18 @@ import 'package:reiz_garden_master/model/client.dart';
 import 'package:reiz_garden_master/model/working_part.dart';
 
 class CreateWorkingPart extends StatefulWidget {
+  const CreateWorkingPart({
+    Key key,
+    this.user,
+    this.role,
+    this.part,
+    this.title
+  }) : super(key: key);
+
+  final FirebaseUser user;
+  final String role;
   final String title;
   final WorkingPart part;
-  CreateWorkingPart(this.part, this.title);
 
   @override
   _CreateWorkingPartState createState() => _CreateWorkingPartState();
@@ -36,6 +46,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
   StreamSubscription<Event> _onWorkerAddedSubscription;
   StreamSubscription<Event> _onWorkerChangedSubscription;
 
+
   bool button;
 
   List<String> material;
@@ -47,6 +58,8 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
 
   String id;
 
+  int hour, minute;
+  double time = 0;
 
   void loadData() {
     dropList = clients.map((val) => new DropdownMenuItem<String>(
@@ -74,6 +87,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
     clients = new List();
     _onClientAddedSubscription = clientReference.onChildAdded.listen(_onClientAdded);
     _onClientChangedSubscription = clientReference.onChildChanged.listen(_onClientChanged);
+
     button = widget.part.finished;
   }
 
@@ -205,25 +219,45 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
                   ),
                   color: Colors.green,
                   onPressed: () {
-                    material.add(_materialController.text);
-                    _materialController.clear();
                     setState(() {
-
+                      material.add(_materialController.text);
                     });
+                    _materialController.clear();
                   },
                 ),
               ),
-              Center(
-                child: Text(
-                   'Numero de materiales usados = ${material.length}',
-                   style: TextStyle(fontSize: 21.0, color: Colors.blueGrey),
-                ),
-              )
+              SizedBox(height: 20.0,),
+              _materialTitle()
             ]
           ),
         )
       ),
     );
+
+  }
+
+  Widget _materialTitle() {
+    var materialLength = material;
+    if (materialLength == null) {
+      return Center(
+        child: Text('No hay materiales'),
+      );
+    } else {
+      return Center(
+        child: ListView.builder(
+          itemCount: material.length,
+          shrinkWrap: true,
+          physics: ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+          itemBuilder: (context, position) {
+            return Column(
+              children: <Widget>[
+                 Text(material[position]),
+              ],
+            );
+          },
+        ),
+      );
+    }
 
   }
 
@@ -284,13 +318,27 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
           _addWorkers();
           startHour = DateFormat.Hm("es_ES").format(DateTime.now());
           date = DateFormat.yMd("es_ES").format(DateTime.now());
+          var dateTime = DateTime.now();
+          minute = dateTime.minute;
+          hour = dateTime.hour;
+          if (minute > 44) {
+            hour = hour+1;
+            minute = 0;
+          } else if (minute > 15 && minute <= 44) {
+            minute = 30;
+          } else {
+            minute = 0;
+          }
           button = false;
           partReference.push().set({
+            'uid': widget.user.uid,
             'client': selected,
             'workers': alWorkers,
             'material': material,
             'date': date,
             'start_hour': startHour,
+            'hour': hour,
+            'minute': minute,
             'finished': false,
             'passed': false
           }).then((doc) {
@@ -304,13 +352,38 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
       _refreshMaterial();
       finalHour = DateFormat.Hm("es_ES").format(DateTime.now());
       date = DateFormat.yMd("es_ES").format(DateTime.now());
+      var dateTime = DateTime.now();
+      minute = dateTime.minute;
+      hour = dateTime.hour;
+      if (minute > 44) {
+        hour = hour+1;
+        minute = 0;
+      } else if (minute > 15 && minute <= 44) {
+        minute = 30;
+      } else {
+        minute = 0;
+      }
+
+      if (minute == 30 && widget.part.minute == 30) {
+        hour = hour + 1;
+      } else if ((minute == 0 && widget.part.minute == 30) || (minute == 30 && widget.part.minute == 0)) {
+        time = 0.5;
+      }
+
+      hour = hour - widget.part.hour;
+      print(minute);
+      print(time);
+      time = time + hour;
+
       partReference.child(widget.part.id).set({
+        'uid': widget.user.uid,
         'client': widget.part.client,
         'workers': alWorkers,
         'material': material,
         'date': date,
         'start_hour': widget.part.startHour,
         'final_hour': finalHour,
+        'time': time,
         'finished': true,
         'passed': false
       }).then((_) {
