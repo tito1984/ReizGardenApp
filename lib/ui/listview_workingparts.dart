@@ -106,6 +106,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
         body: Container(
           child: Column(
             children: <Widget>[
+              SizedBox(height: 7.0,),
               Row(
                 children: <Widget>[
                   SizedBox(width: 12.0,),
