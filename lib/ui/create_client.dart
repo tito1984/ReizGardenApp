@@ -56,7 +56,7 @@ class _CreateClientState extends State<CreateClient> {
           onPressed: () {
             _createClient();
           },
-          color: Colors.green,
+          color: Color.fromRGBO(195, 195, 195, 1.0),
           child: Text(
             'Crear cliente',
             style: TextStyle(color: Colors.white),
@@ -72,7 +72,7 @@ class _CreateClientState extends State<CreateClient> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text('Insertar Cliente'),
-        backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
+        backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
         centerTitle: true,
       ),
       body: Column(
@@ -105,7 +105,6 @@ class _CreateClientState extends State<CreateClient> {
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
 
-      print(_name);
       clientReference.push().set({
         'name': _name
       }).then((_) {

@@ -84,7 +84,7 @@ class _SignInState extends State<SignIn> {
           shape: new RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0)),
           onPressed: signIn,
-          color: Color.fromRGBO(206, 206, 206, 1.0),
+          color: Color.fromRGBO(195, 195, 195, 1.0),
           child: Text(
             'Iniciar Sesion',
             style: TextStyle(color: Colors.white),
@@ -107,7 +107,7 @@ class _SignInState extends State<SignIn> {
             });
             print(_password);
           },
-          color: Color.fromRGBO(206, 206, 206, 1.0),
+          color: Color.fromRGBO(195, 195, 195, 1.0),
           child: Text(
             'iniciar',
             style: TextStyle(color: Colors.white),

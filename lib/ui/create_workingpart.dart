@@ -144,7 +144,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(widget.title),
-          backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
+          backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
           centerTitle: true,
         ),
         body: Center(
@@ -226,7 +226,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
                       color: Colors.white,
                     ),
                   ),
-                  color: Color.fromRGBO(206, 206, 206, 1.0),
+                  color: Color.fromRGBO(195, 195, 195, 1.0),
                   onPressed: () {
                     setState(() {
                       material.add(_materialController.text);

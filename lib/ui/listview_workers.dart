@@ -49,7 +49,7 @@ class _ListViewWorkersState extends State<ListViewWorkers> {
       return FloatingActionButton(
         child: Icon(Icons.add, color: Colors.white,),
         heroTag: 'createWorker',
-        backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
+        backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
         onPressed: () => _createNewWorker(context),
       );
     } else {

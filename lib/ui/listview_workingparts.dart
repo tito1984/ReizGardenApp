@@ -100,7 +100,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white,),
-          backgroundColor: Colors.grey,
+          backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
           onPressed: () => _createNewPart(context, 'Crear parte nuevo'),
         ),
         body: Container(
@@ -290,19 +290,6 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
     );
   }
 
-  void _clientList() {
-    List<String> clients;
-    clients = new List();
-
-    for (var i = 0; i<parts.length; i++) {
-      if (clients == null) {
-        print(parts[i].client);
-        clients.add((parts[i].client).toString());
-      } else if (!clients.contains(parts[i].client)) {
-        clients.add(parts[i].client);
-      }
-    }
-  }
   
   Future<void> _dialogClientList(BuildContext context, double horas, String part ) {
     return showDialog(
