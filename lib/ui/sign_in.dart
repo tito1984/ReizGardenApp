@@ -17,6 +17,9 @@ class _SignInState extends State<SignIn> {
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  var emailCont = new TextEditingController();
+  var passCont = new TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +43,7 @@ class _SignInState extends State<SignIn> {
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
       initialValue: _email,
+      controller: emailCont,
       validator: (input) {
         if(input.isEmpty) {
           return 'Introduce un Email';
@@ -57,6 +61,7 @@ class _SignInState extends State<SignIn> {
       autofocus: false,
       obscureText: true,
       initialValue: _password,
+      controller: passCont,
       validator: (input) {
         if(input.isEmpty) {
           return 'Introduce la contraseña';
@@ -202,8 +207,8 @@ class _SignInState extends State<SignIn> {
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      _email =  (prefs.getString('email')?? '');
-      _password = (prefs.getString('password')?? '');
+      emailCont.text =  (prefs.getString('email')?? '');
+      passCont.text = (prefs.getString('password')?? '');
     });
   }
 
