@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
+
   @override
   _SignInState createState() => new _SignInState();
 }
@@ -20,10 +21,12 @@ class _SignInState extends State<SignIn> {
   void initState() {
     super.initState();
     readData();
+    print(_email);
   }
 
   @override
   Widget build(BuildContext context) {
+    print(_password);
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(
@@ -85,6 +88,29 @@ class _SignInState extends State<SignIn> {
       ),
     );
 
+    final button = Padding(
+      padding: EdgeInsets.symmetric( horizontal: 8.0),
+      child: ButtonTheme(
+        minWidth: 150.0,
+        height: 35.0,
+        child: RaisedButton(
+          shape: new RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0)),
+          onPressed: () {
+            setState(() {
+              readData();
+            });
+            print(_password);
+          },
+          color: Color.fromRGBO(206, 206, 206, 1.0),
+          child: Text(
+            'iniciar',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
@@ -106,6 +132,7 @@ class _SignInState extends State<SignIn> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     loginButton,
+                    button
                   ],
                 ),
               ],
@@ -118,17 +145,11 @@ class _SignInState extends State<SignIn> {
 
   void signIn() async {
 
-
-
-
-
     final _formState = _formKey.currentState;
 
     if (_formState.validate()) {
       _formState.save();
-      if (_email != null || _password != null) {
-        saveData();
-      }
+      saveData();
       try {
         FirebaseUser user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
         await workerReference.once().then((DataSnapshot snapshot) {
@@ -177,12 +198,12 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  readData() async {
+  void readData() async {
     final prefs = await SharedPreferences.getInstance();
 
     setState(() {
-      _email = prefs.getString('email');
-      _password = prefs.getString('password');
+      _email =  (prefs.getString('email')?? '');
+      _password = (prefs.getString('password')?? '');
     });
   }
 
