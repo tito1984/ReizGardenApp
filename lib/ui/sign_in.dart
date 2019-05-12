@@ -24,12 +24,10 @@ class _SignInState extends State<SignIn> {
   void initState() {
     super.initState();
     readData();
-    print(_email);
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_password);
     final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(
@@ -93,29 +91,6 @@ class _SignInState extends State<SignIn> {
       ),
     );
 
-    final button = Padding(
-      padding: EdgeInsets.symmetric( horizontal: 8.0),
-      child: ButtonTheme(
-        minWidth: 150.0,
-        height: 35.0,
-        child: RaisedButton(
-          shape: new RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0)),
-          onPressed: () {
-            setState(() {
-              readData();
-            });
-            print(_password);
-          },
-          color: Color.fromRGBO(195, 195, 195, 1.0),
-          child: Text(
-            'iniciar',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
-      ),
-    );
-
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
@@ -137,7 +112,6 @@ class _SignInState extends State<SignIn> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     loginButton,
-                    button
                   ],
                 ),
               ],
@@ -169,7 +143,6 @@ class _SignInState extends State<SignIn> {
 
         //TODO: Navigate to home
       } catch(e) {
-        print(e.code);
         if (e.code == 'ERROR_WRONG_PASSWORD') {
           _signInAlert(context, 'Password incorrecto');
         } else if (e.code == 'ERROR_INVALID_EMAIL') {
