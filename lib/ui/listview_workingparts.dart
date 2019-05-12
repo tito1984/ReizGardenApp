@@ -109,10 +109,12 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
               Row(
                 children: <Widget>[
                   SizedBox(width: 12.0,),
-                  FlatButton.icon(
+                  RaisedButton.icon(
                     icon: Icon(Icons.access_time),
                     label: Text('Calcula horas totales'),
                     onPressed: () {_hourCalculation();},
+                    color: Colors.white,
+                    elevation: 0.0,
                   ),
                   SizedBox(width: 22.0,),
                 ]
