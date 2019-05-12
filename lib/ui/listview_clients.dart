@@ -56,40 +56,42 @@ class _ListViewClientsState extends State<ListViewClients> {
           centerTitle: true,
           backgroundColor: Colors.green,
         ),*/
-        body: Center(
-          child: ListView.builder(
-            itemCount: clients.length,
-            padding: EdgeInsets.all(15.0),
-            itemBuilder: (context, position) {
-              return Column(
-                children: <Widget>[
-                  Divider(height: 7.0,),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ListTile(
-                          title: Text('${clients[position].name}',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 21.0,
+        body: Container(
+          child: Center(
+            child: ListView.builder(
+              itemCount: clients.length,
+              padding: EdgeInsets.all(15.0),
+              itemBuilder: (context, position) {
+                return Column(
+                  children: <Widget>[
+                    Divider(height: 7.0,),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: ListTile(
+                            title: Text('${clients[position].name}',
+                              style: TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 21.0,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red,),
-                        onPressed: () => _deleteClient(context, clients[position], position),
-                      )
-                    ],
-                  )
-                ],
-              );
-            },
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red,),
+                          onPressed: () => _deleteClient(context, clients[position], position),
+                        )
+                      ],
+                    )
+                  ],
+                );
+              },
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white,),
-          backgroundColor: Colors.green,
+          backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
           onPressed: () => _createNewClient(context),
         ),
       ),

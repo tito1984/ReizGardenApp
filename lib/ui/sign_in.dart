@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SignIn extends StatefulWidget {
   @override
@@ -14,6 +15,13 @@ class _SignInState extends State<SignIn> {
   String roleUser;
   String _email, _password;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    readData();
+  }
+
   @override
   Widget build(BuildContext context) {
     final logo = Hero(
@@ -28,6 +36,7 @@ class _SignInState extends State<SignIn> {
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
+      initialValue: _email,
       validator: (input) {
         if(input.isEmpty) {
           return 'Introduce un Email';
@@ -44,6 +53,7 @@ class _SignInState extends State<SignIn> {
     final password = TextFormField(
       autofocus: false,
       obscureText: true,
+      initialValue: _password,
       validator: (input) {
         if(input.isEmpty) {
           return 'Introduce la contraseña';
@@ -66,7 +76,7 @@ class _SignInState extends State<SignIn> {
           shape: new RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0)),
           onPressed: signIn,
-          color: Colors.green,
+          color: Color.fromRGBO(206, 206, 206, 1.0),
           child: Text(
             'Iniciar Sesion',
             style: TextStyle(color: Colors.white),
@@ -107,10 +117,18 @@ class _SignInState extends State<SignIn> {
   }
 
   void signIn() async {
+
+
+
+
+
     final _formState = _formKey.currentState;
 
     if (_formState.validate()) {
       _formState.save();
+      if (_email != null || _password != null) {
+        saveData();
+      }
       try {
         FirebaseUser user = await FirebaseAuth.instance.signInWithEmailAndPassword(email: _email, password: _password);
         await workerReference.once().then((DataSnapshot snapshot) {
@@ -125,9 +143,53 @@ class _SignInState extends State<SignIn> {
 
         //TODO: Navigate to home
       } catch(e) {
-        print(e.message);
+        print(e.code);
+        if (e.code == 'ERROR_WRONG_PASSWORD') {
+          _signInAlert(context, 'Password incorrecto');
+        } else if (e.code == 'ERROR_INVALID_EMAIL') {
+          _signInAlert(context, 'Email no valido');
+        } else if (e.code == 'ERROR_USER_NOT_FOUND') {
+          _signInAlert(context, 'Usuario no encontrado');
+        } else {
+          _signInAlert(context, 'error desconocido');
+        }
       }
 
     }
+  }
+
+  Future<void> _signInAlert(BuildContext context, String error) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(error),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  readData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      _email = prefs.getString('email');
+      _password = prefs.getString('password');
+    });
+  }
+
+  saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    prefs.setString('email', _email);
+    prefs.setString('password', _password);
   }
 }

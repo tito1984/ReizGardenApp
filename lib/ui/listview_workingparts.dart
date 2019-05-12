@@ -28,6 +28,8 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
   StreamSubscription<Event> _onPartAddedSubscription;
   StreamSubscription<Event> _onPartChangedSubscription;
 
+
+
   var workers;
 
   @override
@@ -36,8 +38,10 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
     super.initState();
     parts = new List();
 
+
     _onPartAddedSubscription = partsReference.onChildAdded.listen(_onPartAdded);
     _onPartChangedSubscription = partsReference.onChildChanged.listen(_onPartChanged);
+
   }
 
   @override
@@ -56,6 +60,33 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
           onPressed: () => _deletePartAlert(context, parts[position], position),
           )
       );
+    } else if (widget.role == 'super_admin') {
+      return Expanded(
+          child: IconButton(
+            icon: Icon(Icons.delete, color: Colors.red,),
+            onPressed: () => _deletePartAlert(context, parts[position], position),
+          )
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget calculateButton(int position) {
+    if (widget.role == 'admin') {
+      return Expanded(
+          child: IconButton(
+            icon: Icon(Icons.access_time, color: Colors.black),
+            onPressed: () => _hourCalculationClient(parts[position].client),
+          )
+      );
+    } else if (widget.role == 'super_admin') {
+      return Expanded(
+          child: IconButton(
+            icon: Icon(Icons.access_time, color: Colors.black,),
+            onPressed: () => _hourCalculationClient(parts[position].client),
+          )
+      );
     } else {
       return Container();
     }
@@ -67,93 +98,107 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
 
     return MaterialApp(
       home: Scaffold(
-        body: Container(
-          child: ListView.builder(
-            itemCount: parts.length,
-            padding: EdgeInsets.all(15.0),
-
-            shrinkWrap: true,
-            itemBuilder: (context, position) {
-              workers = new List<String>.from(parts[position].workers);
-              return Column(
-                children: <Widget>[
-                  Divider(height: 7.0,),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ListTile(
-                          title: Text('${parts[position].client}',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 21.0,
-                            ),
-                          ),
-                          subtitle: Text('${parts[position].workers.length} trabajadores',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          onTap: () {
-                            if (parts[position].finished == false) {
-                              _editNewPart(parts[position], 'Editar parte');
-                            } else {
-                              _viewPart(parts[position]);
-                            }
-                          },
-                        ),
-                      ),
-                      Expanded(
-                        child: ListTile(
-                          title: Text('Horas: ${_isFinished(parts[position])}',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 18.0
-                            ),
-                          ),
-                          subtitle: Text('${parts[position].date}',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 18.0,
-                            ),
-                          ),
-                          onTap: () {
-                            if (parts[position].finished == false) {
-                              _editNewPart(parts[position], 'Editar parte');
-                            } else {
-                              _viewPart(parts[position]);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text('${_numberMaterial(parts[position])} materiales usados',
-                          style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 18.0,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                      deleteButton(position)
-
-                    ],
-                  )
-                ],
-              );
-            },
-          ),
-        ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white,),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.grey,
           onPressed: () => _createNewPart(context, 'Crear parte nuevo'),
         ),
+        body: Container(
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  SizedBox(width: 12.0,),
+                  FlatButton.icon(
+                    icon: Icon(Icons.access_time),
+                    label: Text('Calcula horas totales'),
+                    onPressed: () {_hourCalculation();},
+                  ),
+                  SizedBox(width: 22.0,),
+                ]
+              ),
+              ListView.builder(
+                itemCount: parts.length,
+                padding: EdgeInsets.all(5.0),
+                shrinkWrap: true,
+                itemBuilder: (context, position) {
+                  workers = new List<String>.from(parts[position].workers);
+                  return Column(
+                    children: <Widget>[
+                      Divider(height: 2.0,),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: ListTile(
+                              title: Text('${parts[position].client}',
+                                style: TextStyle(
+                                  color: Colors.blueGrey,
+                                  fontSize: 21.0,
+                                ),
+                              ),
+                              subtitle: Text('${parts[position].workers.length} trabajadores',
+                                style: TextStyle(
+                                  color: Colors.blueGrey,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                              onTap: () {
+                                if (parts[position].finished == false) {
+                                  _editNewPart(parts[position], 'Editar parte');
+                                } else {
+                                  _viewPart(parts[position]);
+                                }
+                              },
+                            ),
+                          ),
+                          Expanded(
+                            child: ListTile(
+                              title: Text('Horas: ${_isFinished(parts[position])}',
+                                style: TextStyle(
+                                    color: Colors.blueGrey,
+                                    fontSize: 18.0
+                                ),
+                              ),
+                              subtitle: Text('${parts[position].date}',
+                                style: TextStyle(
+                                  color: Colors.blueGrey,
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                              onTap: () {
+                                if (parts[position].finished == false) {
+                                  _editNewPart(parts[position], 'Editar parte');
+                                } else {
+                                  _viewPart(parts[position]);
+                                }
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Text('${_numberMaterial(parts[position])} materiales usados',
+                              style: TextStyle(
+                                color: Colors.blueGrey,
+                                fontSize: 18.0,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          calculateButton(position),
+                          deleteButton(position),
+                        ],
+                      )
+                    ],
+                  );
+                },
+              )
+            ],
+          ),
+        )
       ),
     );
   }
@@ -240,6 +285,61 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
           );
         }
     );
+  }
+
+  void _clientList() {
+    List<String> clients;
+    clients = new List();
+
+    for (var i = 0; i<parts.length; i++) {
+      if (clients == null) {
+        print(parts[i].client);
+        clients.add((parts[i].client).toString());
+      } else if (!clients.contains(parts[i].client)) {
+        clients.add(parts[i].client);
+      }
+    }
+  }
+  
+  Future<void> _dialogClientList(BuildContext context, double horas, String part ) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Has trabajado '+ horas.toString() + ' horas en ' + part),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      }
+    );
+  }
+
+  void _hourCalculationClient(String client) {
+    double hours = 0;
+
+    for (var i=0; i<parts.length; i++) {
+      if (parts[i].client == client) {
+        hours = hours + parts[i].time;
+      }
+    }
+    _dialogClientList(context, hours, client);
+
+  }
+
+  void _hourCalculation() {
+    double hours = 0;
+    for (var i=0; i<parts.length; i++) {
+      hours = hours + parts[i].time;
+
+    }
+
+    _dialogClientList(context, hours, 'total');
   }
 
 

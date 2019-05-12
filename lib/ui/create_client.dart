@@ -23,18 +23,48 @@ class CreateClient extends StatefulWidget {
 final clientReference = FirebaseDatabase.instance.reference().child('clients');
 
 class _CreateClientState extends State<CreateClient> {
-  TextEditingController _nameEditingController;
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  String _name;
 
-    _nameEditingController = new TextEditingController(text: widget.client.name);
-  }
 
   @override
   Widget build(BuildContext context) {
+    final name = TextFormField(
+      autofocus: false,
+      validator: (input) {
+        if(input.isEmpty) {
+          return 'Introduce un nombre de cliente';
+        }
+      },
+      onSaved: (input) => _name = input,
+      decoration: InputDecoration(
+          hintText: 'Nombre',
+          contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+          border:
+          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+
+    final createClient = Padding(
+      padding: EdgeInsets.symmetric( horizontal: 8.0),
+      child: ButtonTheme(
+        minWidth: 150.0,
+        height: 35.0,
+        child: RaisedButton(
+          shape: new RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0)),
+          onPressed: () {
+            _createClient();
+          },
+          color: Colors.green,
+          child: Text(
+            'Crear cliente',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      ),
+    );
+
     return Scaffold(
       appBar: AppBar(
         leading: FlatButton(
@@ -42,29 +72,46 @@ class _CreateClientState extends State<CreateClient> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text('Insertar Cliente'),
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
         centerTitle: true,
       ),
       body: Column(
         children: <Widget>[
-          TextField(
-            controller: _nameEditingController,
-            decoration: InputDecoration(),
+          Form(
+            key: _formKey,
+            child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.only(left: 24.0, right: 24.0),
+              children: <Widget>[
+                SizedBox(height: 60.0),
+                name,
+                SizedBox(height: 8.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    createClient,
+                  ],
+                ),
+              ],
+            ),
           ),
-          Padding(padding: new EdgeInsets.all(5.0)),
-          RaisedButton(
-            child: Text('Añadir'),
-            onPressed: () {
-              clientReference.push().set({
-                'name': _nameEditingController.text
-              }).then((_) {
-                Navigator.pop(context);
-              });
-            },
-          )
         ],
       ),
     );
   }
 
+  void _createClient() {
+
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+
+      print(_name);
+      clientReference.push().set({
+        'name': _name
+      }).then((_) {
+        Navigator.pop(context);
+      });
+    }
+
+  }
 }

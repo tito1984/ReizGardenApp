@@ -28,12 +28,6 @@ class _CreateWorkerState extends State<CreateWorker> {
   String _email, _name, _password;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
 
     final name = TextFormField(
@@ -94,7 +88,7 @@ class _CreateWorkerState extends State<CreateWorker> {
             signUp();
 
           },
-          color: Colors.green,
+          color: Color.fromRGBO(206, 206, 206, 1.0),
           child: Text(
             'Crear trabajador',
             style: TextStyle(color: Colors.white),
@@ -110,7 +104,7 @@ class _CreateWorkerState extends State<CreateWorker> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text('Crear Trabajador'),
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
         centerTitle: true,
       ),
       body: Column(

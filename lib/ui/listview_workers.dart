@@ -45,12 +45,44 @@ class _ListViewWorkersState extends State<ListViewWorkers> {
   }
 
   Widget createWorkerButton() {
-    if (widget.role == 'admin') {
+    if (widget.role == 'super_admin') {
       return FloatingActionButton(
         child: Icon(Icons.add, color: Colors.white,),
         heroTag: 'createWorker',
-        backgroundColor: Colors.green,
+        backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
         onPressed: () => _createNewWorker(context),
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget listViewWorkers(int position) {
+    if (workers[position].role == 'super_admin') {
+      return Container();
+    } else {
+      return Column(
+        children: <Widget>[
+          Divider(height: 7.0,),
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: ListTile(
+                  title: Text('${workers[position].name}',
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 21.0,
+                    ),
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.delete, color: Colors.red,),
+                onPressed: () => _deleteWorker(context,workers[position], position),
+              )
+            ],
+          )
+        ],
       );
     }
   }
@@ -70,29 +102,7 @@ class _ListViewWorkersState extends State<ListViewWorkers> {
             itemCount: workers.length,
             padding: EdgeInsets.all(15.0),
             itemBuilder: (context, position) {
-              return Column(
-                children: <Widget>[
-                  Divider(height: 7.0,),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: ListTile(
-                          title: Text('${workers[position].name}',
-                            style: TextStyle(
-                              color: Colors.blueGrey,
-                              fontSize: 21.0,
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red,),
-                        onPressed: () => _deleteWorker(context,workers[position], position),
-                      )
-                    ],
-                  )
-                ],
-              );
+              return listViewWorkers(position);
             },
           ),
         ),

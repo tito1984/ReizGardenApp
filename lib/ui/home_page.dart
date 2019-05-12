@@ -46,9 +46,9 @@ class _HomePageState extends State<HomePage> {
                 Tab(text: 'Trabajadores',)
               ],
             ),
-            title: Text('Reiz Garden'),
+            title: Image.asset('assets/images/logo2.png'),
             centerTitle: true,
-            backgroundColor: Colors.green,
+            backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
           ),
           body: TabBarView(
             children: <Widget>[

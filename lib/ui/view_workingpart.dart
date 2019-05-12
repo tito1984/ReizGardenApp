@@ -75,7 +75,7 @@ class _ViewWorkingPartState extends State<ViewWorkingPart> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text('Ver Parte'),
-          backgroundColor: Colors.green,
+          backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
           centerTitle: true,
         ),
         body: Center(
@@ -140,7 +140,7 @@ class _ViewWorkingPartState extends State<ViewWorkingPart> {
                         color: Colors.white,
                       ),
                     ),
-                    color: Colors.green,
+                    color: Color.fromRGBO(206, 206, 206, 1.0),
 
                     onPressed: () {}
                 ),
@@ -204,7 +204,7 @@ class _ViewWorkingPartState extends State<ViewWorkingPart> {
                         color: Colors.white,
                       ),
                     ),
-                    color: Colors.green,
+                    color: Color.fromRGBO(206, 206, 206, 1.0),
 
                     onPressed: () {}
                 ),

@@ -64,6 +64,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
   void loadData() {
     dropList = clients.map((val) => new DropdownMenuItem<String>(
       child: Text(val.name), value: val.name,
+
     )).toList();
     if (widget.part.client != null) {
       selected = widget.part.client;
@@ -101,6 +102,35 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
     _onWorkerAddedSubscription.cancel();
   }
 
+  Widget listViewWorkers(int position) {
+    if (workers[position].role == 'super_admin') {
+      return Container();
+    } else {
+      return Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Checkbox(
+                  value: workers[position].isCheck,
+                  onChanged: (bool value) {
+                    setState(() {
+                      workers[position].isChecked = value;
+                      workerReference.child(workers[position].id).set({
+                        'check': value,
+                        'name': workers[position].name
+                      });
+                    });
+                  },
+                ),
+                Text('${workers[position].name}')
+              ],
+            )
+          ]
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     loadData();
@@ -114,7 +144,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
             onPressed: () => Navigator.pop(context),
           ),
           title: Text(widget.title),
-          backgroundColor: Colors.green,
+          backgroundColor: Color.fromRGBO(206, 206, 206, 1.0),
           centerTitle: true,
         ),
         body: Center(
@@ -148,28 +178,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
                   itemCount: workers.length,
                   shrinkWrap: true,
                   itemBuilder: (context, position) {
-                    return Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Checkbox(
-                              value: workers[position].isCheck,
-                              onChanged: (bool value) {
-                                setState(() {
-                                  workers[position].isChecked = value;
-                                  workerReference.child(workers[position].id).set({
-                                    'check': value,
-                                    'name': workers[position].name
-                                  });
-                                });
-                              },
-                            ),
-                            Text('${workers[position].name}')
-                          ],
-                        )
-                      ]
-                    );
+                    return listViewWorkers(position);
                   },
                 )
               ),
@@ -217,7 +226,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
                       color: Colors.white,
                     ),
                   ),
-                  color: Colors.green,
+                  color: Color.fromRGBO(206, 206, 206, 1.0),
                   onPressed: () {
                     setState(() {
                       material.add(_materialController.text);
@@ -365,7 +374,7 @@ class _CreateWorkingPartState extends State<CreateWorkingPart> {
       }
 
       if (minute == 30 && widget.part.minute == 30) {
-        hour = hour + 1;
+        hour = hour;
       } else if ((minute == 0 && widget.part.minute == 30) || (minute == 30 && widget.part.minute == 0)) {
         time = 0.5;
       }
