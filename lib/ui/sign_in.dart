@@ -40,7 +40,6 @@ class _SignInState extends State<SignIn> {
     final email = TextFormField(
       keyboardType: TextInputType.emailAddress,
       autofocus: false,
-      initialValue: _email,
       controller: emailCont,
       validator: (input) {
         if(input.isEmpty) {
@@ -58,7 +57,6 @@ class _SignInState extends State<SignIn> {
     final password = TextFormField(
       autofocus: false,
       obscureText: true,
-      initialValue: _password,
       controller: passCont,
       validator: (input) {
         if(input.isEmpty) {
@@ -82,7 +80,7 @@ class _SignInState extends State<SignIn> {
           shape: new RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0)),
           onPressed: signIn,
-          color: Color.fromRGBO(195, 195, 195, 1.0),
+          color: Colors.red,
           child: Text(
             'Iniciar Sesion',
             style: TextStyle(color: Colors.white),

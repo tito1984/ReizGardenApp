@@ -56,7 +56,7 @@ class _CreateClientState extends State<CreateClient> {
           onPressed: () {
             _createClient();
           },
-          color: Color.fromRGBO(195, 195, 195, 1.0),
+          color: Colors.red,
           child: Text(
             'Crear cliente',
             style: TextStyle(color: Colors.white),
@@ -72,7 +72,7 @@ class _CreateClientState extends State<CreateClient> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text('Insertar Cliente'),
-        backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
+        backgroundColor: Colors.red,
         centerTitle: true,
       ),
       body: Column(

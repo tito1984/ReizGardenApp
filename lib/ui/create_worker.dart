@@ -88,7 +88,7 @@ class _CreateWorkerState extends State<CreateWorker> {
             signUp();
 
           },
-          color: Color.fromRGBO(195, 195, 195, 1.0),
+          color: Colors.red,
           child: Text(
             'Crear trabajador',
             style: TextStyle(color: Colors.white),
@@ -104,7 +104,7 @@ class _CreateWorkerState extends State<CreateWorker> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text('Crear Trabajador'),
-        backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
+        backgroundColor: Colors.red,
         centerTitle: true,
       ),
       body: Column(

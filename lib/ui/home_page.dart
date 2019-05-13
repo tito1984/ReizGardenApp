@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
             ),
             title: Image.asset('assets/images/logo2.png'),
             centerTitle: true,
-            backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
+            backgroundColor: Colors.red,
           ),
           body: TabBarView(
             children: <Widget>[

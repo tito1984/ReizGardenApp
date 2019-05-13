@@ -100,7 +100,7 @@ class _ListViewWorkingPartsState extends State<ListViewWorkingParts> {
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add, color: Colors.white,),
-          backgroundColor: Color.fromRGBO(195, 195, 195, 1.0),
+          backgroundColor: Colors.red,
           onPressed: () => _createNewPart(context, 'Crear parte nuevo'),
         ),
         body: Container(
